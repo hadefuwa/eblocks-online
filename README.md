@@ -57,7 +57,7 @@ A desktop application for connecting, programming, and monitoring E-Blocks 3 dev
 
 1. **Clone the repository**
    ```bash
-   git clone [<repository-url>](https://github.com/hadefuwa/eblocks-companion-app)
+   git clone https://github.com/hadefuwa/eblocks-companion-app
    cd eblocks-companion-app
    ```
 
