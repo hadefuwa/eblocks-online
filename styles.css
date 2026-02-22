@@ -54,6 +54,22 @@ body {
   padding: 0 20px;
 }
 
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-img {
+  height: 40px;
+  width: auto;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
 .header-logo h1 {
   font-size: 20px;
   font-weight: 600;
