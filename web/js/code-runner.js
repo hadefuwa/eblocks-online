@@ -191,21 +191,21 @@ void loop() {
    */
   loadJSCPP() {
     return new Promise((resolve) => {
-      const tryLoad = (src) => {
+      const loadScript = (src, onDone) => {
         const s = document.createElement('script');
         s.src = src;
-        s.onload = () => resolve();
-        s.onerror = () => resolve();
+        s.onload = () => onDone(true);
+        s.onerror = () => onDone(false);
         document.head.appendChild(s);
       };
 
-      // Try jsDelivr first, then unpkg
-      tryLoad('https://cdn.jsdelivr.net/npm/jscpp@1.1.3/dist/JSCPP.es5.min.js');
-      setTimeout(() => {
-        if (typeof JSCPP === 'undefined') {
-          tryLoad('https://unpkg.com/jscpp@1.1.3/dist/JSCPP.es5.min.js');
+      // Try jsDelivr first, then unpkg if needed
+      loadScript('https://cdn.jsdelivr.net/npm/jscpp@1.1.3/dist/JSCPP.es5.min.js', (ok) => {
+        if (ok && typeof JSCPP !== 'undefined') {
+          return resolve();
         }
-      }, 800);
+        loadScript('https://unpkg.com/jscpp@1.1.3/dist/JSCPP.es5.min.js', () => resolve());
+      });
     });
   }
 
