@@ -1,6 +1,28 @@
-# E-Blocks 3 Companion App
+# eBlocks Online
 
-A desktop application for connecting, programming, and monitoring E-Blocks 3 devices. Built with Electron, this companion app provides a complete development environment for E-Blocks boards including Arduino Mega, ESP32, and PIC microcontrollers.
+## 🌐 **NEW: Web-Based IDE Now Available!**
+
+**Try it now:** [https://hadefuwa.github.io/eblocks-online/](https://hadefuwa.github.io/eblocks-online/)
+
+A pure web-based development environment for Arduino and ESP32 boards - **no installation required!**
+
+### ✨ Web IDE Features
+- 🌍 **100% Browser-Based** - No downloads, no installation
+- 💻 **Monaco Editor** - Full VS Code editing experience
+- 🔌 **Web Serial API** - Direct USB connection to boards
+- 🚀 **Run Code in Browser** - JSCPP C++ interpreter
+- 🎯 **Firmata Protocol** - Control hardware via StandardFirmata
+- 🎨 **Modern UI** - Dark theme, responsive design
+
+**Browser Requirements:** Chrome 89+ / Edge 89+ / Opera 75+ (Web Serial API support)
+
+📖 **[Web IDE Documentation](./web/README.md)**
+
+---
+
+## 🖥️ Legacy Desktop Application (Electron)
+
+The original E-Blocks 3 Companion desktop application for Windows. Built with Electron, this app provides a complete development environment for E-Blocks boards including Arduino Mega, ESP32, and PIC microcontrollers.
 
 ![Version](https://img.shields.io/badge/version-2.7.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
