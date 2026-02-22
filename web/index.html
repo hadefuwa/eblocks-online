@@ -172,20 +172,12 @@
   <!-- Monaco Editor from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
   
-  <!-- JSCPP for C++ interpretation -->
-  <script src="https://cdn.jsdelivr.net/npm/jscpp@1.1.3/dist/JSCPP.es5.min.js"></script>
-  <script>
-    // Fallback CDN if jsDelivr fails
-    if (!window.JSCPP) {
-      var s = document.createElement('script');
-      s.src = 'https://unpkg.com/jscpp@1.1.3/dist/JSCPP.es5.min.js';
-      document.head.appendChild(s);
-    }
-  </script>
+  <!-- JSCPP bundled locally for reliability -->
+  <script src="vendor/jscpp.bundle.js"></script>
   
   <script>
     // Build/version marker (update on deploy)
-    window.EBLOCKS_VERSION = "v1.0.3";
+    window.EBLOCKS_VERSION = "v1.0.4";
   </script>
 
   <!-- Main application modules -->
