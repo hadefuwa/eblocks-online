@@ -175,11 +175,14 @@
   <!-- Monaco Editor from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
   
+  <!-- Lodash (required by JSCPP) -->
+  <script src="vendor/lodash.min.js"></script>
+
   <!-- JSCPP bundled locally for reliability -->
   <script src="vendor/jscpp.bundle.js"></script>
   <script>
     // Build/version marker (update on deploy)
-    window.EBLOCKS_VERSION = "v1.0.7";
+    window.EBLOCKS_VERSION = "v1.0.8";
     // JSCPP load check
     window.EBLOCKS_JSCPP_LOADED = (typeof window.JSCPP !== 'undefined');
     console.log('[eBlocks] JSCPP global after bundle:', window.EBLOCKS_JSCPP_LOADED);
