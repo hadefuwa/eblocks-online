@@ -202,15 +202,21 @@ void loop() {
 
       console.log('[CodeRunner] Loading JSCPP...');
 
-      // Try jsDelivr first, then unpkg if needed
-      loadScript('https://cdn.jsdelivr.net/npm/jscpp@1.1.3/dist/JSCPP.es5.min.js', (ok) => {
-        console.log('[CodeRunner] jsDelivr loaded:', ok);
+      // Try local bundle first, then CDNs if needed
+      loadScript('vendor/jscpp.bundle.js', (ok) => {
+        console.log('[CodeRunner] local bundle loaded:', ok);
         if (ok && typeof JSCPP !== 'undefined') {
           return resolve();
         }
-        loadScript('https://unpkg.com/jscpp@1.1.3/dist/JSCPP.es5.min.js', (ok2) => {
-          console.log('[CodeRunner] unpkg loaded:', ok2);
-          resolve();
+        loadScript('https://cdn.jsdelivr.net/npm/jscpp@1.1.3/dist/JSCPP.es5.min.js', (ok2) => {
+          console.log('[CodeRunner] jsDelivr loaded:', ok2);
+          if (ok2 && typeof JSCPP !== 'undefined') {
+            return resolve();
+          }
+          loadScript('https://unpkg.com/jscpp@1.1.3/dist/JSCPP.es5.min.js', (ok3) => {
+            console.log('[CodeRunner] unpkg loaded:', ok3);
+            resolve();
+          });
         });
       });
     });
