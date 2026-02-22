@@ -14,7 +14,7 @@
     <header class="app-header">
       <div class="header-logo">
         <h1>eBlocks Online</h1>
-        <span class="version">Web IDE v1.0</span>
+        <span class="version" id="app-version">Web IDE v1.0</span>
       </div>
       <div class="header-controls">
         <button id="connect-btn" class="btn btn-primary">
@@ -183,6 +183,11 @@
     }
   </script>
   
+  <script>
+    // Build/version marker (update on deploy)
+    window.EBLOCKS_VERSION = "v1.0.3";
+  </script>
+
   <!-- Main application modules -->
   <script type="module" src="js/app.js"></script>
 </body>
