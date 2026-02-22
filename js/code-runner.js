@@ -28,12 +28,16 @@ export class CodeRunner {
     this.isRunning = true;
     this.shouldStop = false;
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const startTime = Date.now();
       let loopIterations = 0;
 
       try {
-        // Check if JSCPP is available
+        // Ensure JSCPP is available (load dynamically if needed)
+        if (typeof JSCPP === 'undefined') {
+          await this.loadJSCPP();
+        }
+
         if (typeof JSCPP === 'undefined') {
           throw new Error('JSCPP library not loaded');
         }
@@ -180,6 +184,29 @@ void loop() {
     }
     
     return errorStr;
+  }
+
+  /**
+   * Dynamically load JSCPP from CDN (with fallback)
+   */
+  loadJSCPP() {
+    return new Promise((resolve) => {
+      const tryLoad = (src) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.onload = () => resolve();
+        s.onerror = () => resolve();
+        document.head.appendChild(s);
+      };
+
+      // Try jsDelivr first, then unpkg
+      tryLoad('https://cdn.jsdelivr.net/npm/jscpp@1.1.3/dist/JSCPP.es5.min.js');
+      setTimeout(() => {
+        if (typeof JSCPP === 'undefined') {
+          tryLoad('https://unpkg.com/jscpp@1.1.3/dist/JSCPP.es5.min.js');
+        }
+      }, 800);
+    });
   }
 
   /**
