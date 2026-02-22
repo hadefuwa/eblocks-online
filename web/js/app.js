@@ -58,7 +58,10 @@ void loop() {
     
     // Load saved code if exists
     this.loadSavedCode();
-    
+
+    // Debug info + version display
+    this.logDebugInfo();
+
     console.log('eBlocks Online initialized successfully');
   }
 
@@ -351,9 +354,22 @@ void loop() {
     }
   }
 
+  logDebugInfo() {
+    const versionEl = document.getElementById('app-version');
+    const ver = window.EBLOCKS_VERSION || 'v1.0.0';
+    if (versionEl) versionEl.textContent = `Web IDE ${ver}`;
+
+    const jscppStatus = (typeof JSCPP !== 'undefined') ? 'loaded' : 'missing';
+    console.log(`[eBlocks] Version: ${ver}`);
+    console.log(`[eBlocks] JSCPP status: ${jscppStatus}`);
+    this.logToConsole(`🔎 Version: ${ver}`, 'info');
+    this.logToConsole(`🔎 JSCPP: ${jscppStatus}`, jscppStatus === 'loaded' ? 'success' : 'warning');
+  }
+
   showAbout() {
+    const ver = window.EBLOCKS_VERSION || 'v1.0.0';
     alert(`eBlocks Online - Web-Based IDE
-Version: 1.0.0
+Version: ${ver}
 
 A pure web-based development environment for Arduino and ESP32 boards.
 

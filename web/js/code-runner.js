@@ -39,6 +39,7 @@ export class CodeRunner {
         }
 
         if (typeof JSCPP === 'undefined') {
+          console.error('[CodeRunner] JSCPP still missing after loadJSCPP()');
           throw new Error('JSCPP library not loaded');
         }
 
@@ -199,12 +200,18 @@ void loop() {
         document.head.appendChild(s);
       };
 
+      console.log('[CodeRunner] Loading JSCPP...');
+
       // Try jsDelivr first, then unpkg if needed
       loadScript('https://cdn.jsdelivr.net/npm/jscpp@1.1.3/dist/JSCPP.es5.min.js', (ok) => {
+        console.log('[CodeRunner] jsDelivr loaded:', ok);
         if (ok && typeof JSCPP !== 'undefined') {
           return resolve();
         }
-        loadScript('https://unpkg.com/jscpp@1.1.3/dist/JSCPP.es5.min.js', () => resolve());
+        loadScript('https://unpkg.com/jscpp@1.1.3/dist/JSCPP.es5.min.js', (ok2) => {
+          console.log('[CodeRunner] unpkg loaded:', ok2);
+          resolve();
+        });
       });
     });
   }
