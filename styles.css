@@ -1778,3 +1778,24 @@ body {
 .worksheet-load-code {
   margin-top: 8px;
 }
+
+/* Mobile responsive: stack everything vertically */
+@media (max-width: 900px) {
+  .app-titlebar { flex-wrap: wrap; height: auto; padding: 12px; gap: 8px; }
+  .titlebar-menu { flex-wrap: wrap; width: 100%; }
+  .menu-btn { flex: 1 1 auto; }
+
+  .app-header { flex-direction: column; align-items: flex-start; gap: 12px; height: auto; padding: 12px; }
+  .header-controls { flex-direction: column; align-items: flex-start; gap: 8px; width: 100%; }
+
+  .app-container { display: flex; flex-direction: column; gap: 12px; }
+  .sidebar-resizer { display: none !important; }
+  .sidebar, #leftSidebar, #rightSidebar { width: 100% !important; max-width: 100% !important; }
+  .app-main { width: 100%; }
+  .code-editor, .serial-monitor, .curriculum-page { width: 100%; }
+}
+
+@media (max-width: 600px) {
+  .logo-img { height: 32px; }
+  .worksheet-content { max-height: 50vh; }
+}
