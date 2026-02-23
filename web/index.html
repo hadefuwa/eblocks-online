@@ -10,6 +10,20 @@
 </head>
 <body>
   <div class="app">
+    <!-- Titlebar -->
+    <header class="app-titlebar">
+      <div class="titlebar-icon">
+        <img src="assets/matrix.png" alt="Matrix Logo" class="titlebar-logo">
+      </div>
+      <div class="titlebar-title">E-Blocks 3 Companion</div>
+      <div class="titlebar-menu">
+        <button class="menu-btn active">Code Editor</button>
+        <button class="menu-btn" onclick="location.href='curriculum.html'">Curriculum</button>
+        <button class="menu-btn" onclick="location.href='shop.html'">Shop</button>
+        <button class="menu-btn" onclick="location.href='settings.html'">⚙️ Settings</button>
+      </div>
+    </header>
+
     <!-- Header -->
     <header class="app-header">
       <div class="header-logo">
@@ -182,7 +196,7 @@
   <script src="vendor/jscpp.bundle.js"></script>
   <script>
     // Build/version marker (update on deploy)
-    window.EBLOCKS_VERSION = "v1.0.9";
+    window.EBLOCKS_VERSION = "v1.1.0";
     // JSCPP load check
     window.EBLOCKS_JSCPP_LOADED = (typeof window.JSCPP !== 'undefined');
     console.log('[eBlocks] JSCPP global after bundle:', window.EBLOCKS_JSCPP_LOADED);
