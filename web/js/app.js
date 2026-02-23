@@ -59,6 +59,9 @@ void loop() {
     // Load saved code if exists
     this.loadSavedCode();
 
+    // Curriculum / worksheets
+    this.initCurriculum();
+
     // Ensure JSCPP is loaded, then debug info
     await this.ensureJSCPP();
     this.logDebugInfo();
@@ -371,6 +374,63 @@ void loop() {
       };
       document.head.appendChild(s);
     });
+  }
+
+  initCurriculum() {
+    const curriculumContent = document.getElementById('curriculum-content');
+    const worksheetViewer = document.getElementById('worksheet-viewer');
+    const curriculumListEl = document.getElementById('curriculum-list');
+    const worksheetTitle = document.getElementById('worksheet-viewer-title');
+    const worksheetCode = document.getElementById('worksheet-viewer-code');
+    const worksheetContent = document.getElementById('worksheet-content');
+    const closeBtn = document.getElementById('worksheet-close-btn');
+
+    if (!curriculumContent) return; // curriculum UI not present
+
+    const list = [
+      { code: 'CP4807', title: 'Curriculum Overview', file: 'assets/curriculum1.txt' },
+      { code: 'CP0507', title: 'Motors and Microcontrollers', file: 'assets/CP0507 - Motors and microconrtollers.txt' },
+      { code: 'CP1972', title: 'Sensors and Microcontrollers', file: 'assets/CP1972 - Sensors and microcontrollers.txt' },
+      { code: 'CP4436', title: 'PC and Web Interfacing', file: 'assets/CP4436 - PC and web interfacing.txt' }
+    ];
+
+    const showList = () => {
+      if (worksheetViewer) worksheetViewer.style.display = 'none';
+      if (curriculumListEl) curriculumListEl.style.display = 'block';
+    };
+
+    const showWorksheet = async (item) => {
+      if (curriculumListEl) curriculumListEl.style.display = 'none';
+      if (worksheetViewer) worksheetViewer.style.display = 'block';
+      if (worksheetTitle) worksheetTitle.textContent = item.title;
+      if (worksheetCode) worksheetCode.textContent = item.code;
+      if (worksheetContent) worksheetContent.textContent = 'Loading...';
+      try {
+        const res = await fetch(item.file);
+        const text = await res.text();
+        if (worksheetContent) worksheetContent.textContent = text;
+      } catch (e) {
+        if (worksheetContent) worksheetContent.textContent = 'Failed to load worksheet.';
+      }
+    };
+
+    curriculumContent.innerHTML = '';
+    list.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'curriculum-item';
+      div.innerHTML = `
+        <div class="curriculum-item-icon">📚</div>
+        <div class="curriculum-item-info">
+          <div class="curriculum-item-code">${item.code}</div>
+          <div class="curriculum-item-title">${item.title}</div>
+        </div>
+      `;
+      div.addEventListener('click', () => showWorksheet(item));
+      curriculumContent.appendChild(div);
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', showList);
+    showList();
   }
 
   logDebugInfo() {

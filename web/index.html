@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>eBlocks Online - Web IDE</title>
+  <title>E-Blocks 3 Companion</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Monaco Editor CSS from CDN -->
-  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/editor/editor.main.css">
 </head>
 <body>
   <div class="app">
@@ -17,189 +15,245 @@
       </div>
       <div class="titlebar-title">E-Blocks 3 Companion</div>
       <div class="titlebar-menu">
-        <button class="menu-btn active">Code Editor</button>
-        <button class="menu-btn" onclick="location.href='curriculum.html'">Curriculum</button>
-        <button class="menu-btn" onclick="location.href='shop.html'">Shop</button>
-        <button class="menu-btn" onclick="location.href='settings.html'">⚙️ Settings</button>
+        <button id="menu-code-editor" class="menu-btn active">Code Editor</button>
+        <button id="menu-graphical" class="menu-btn" disabled>Graphical</button>
+        <button id="menu-shop" class="menu-btn" onclick="location.href='shop.html'">Shop</button>
+        <button id="menu-settings" class="menu-btn" onclick="location.href='settings.html'">⚙️ Settings</button>
       </div>
     </header>
 
-    <!-- Header -->
-    <header class="app-header">
-      <div class="header-logo">
-        <img src="assets/matrix.png" alt="Matrix" class="logo-img" />
-        <div class="logo-text">
-          <h1>eBlocks Online</h1>
-          <span class="version" id="app-version">Web IDE v1.0</span>
+    <!-- Menu Navigation Script -->
+    <script>
+      // Handle menu navigation - run immediately when DOM is ready
+      (function() {
+        function initMenuNavigation() {
+          const codeEditorBtn = document.getElementById('menu-code-editor');
+          const shopBtn = document.getElementById('menu-shop');
+          const settingsBtn = document.getElementById('menu-settings');
+          
+          if (codeEditorBtn) {
+            codeEditorBtn.addEventListener('click', () => {
+              // Already on code editor page, just ensure active state
+              codeEditorBtn.classList.add('active');
+              shopBtn?.classList.remove('active');
+              settingsBtn?.classList.remove('active');
+            });
+          }
+          
+          if (shopBtn) {
+            shopBtn.addEventListener('click', () => {
+              window.location.href = '/shop.html';
+            });
+          }
+          
+          if (settingsBtn) {
+            settingsBtn.addEventListener('click', () => {
+              window.location.href = '/settings.html';
+            });
+          }
+        }
+        
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initMenuNavigation);
+        } else {
+          initMenuNavigation();
+        }
+      })();
+    </script>
+
+    <!-- Driver Installation Banner -->
+    <div id="driver-banner" class="driver-banner" style="display: none;">
+      <div class="driver-banner-content">
+        <div class="driver-banner-icon">⚠️</div>
+        <div class="driver-banner-text">
+          <strong>E-Blocks USB drivers are not installed.</strong> Install drivers to connect your E-Blocks board.
+        </div>
+        <button id="driver-banner-install-btn" class="driver-banner-btn">Install Drivers</button>
+      </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="app-container">
+      <!-- Left Sidebar -->
+      <div class="sidebar sidebar-left" id="leftSidebar">
+        <div class="sidebar-header">
+          <button class="sidebar-toggle" id="leftSidebarToggle" title="Collapse">←</button>
+        </div>
+        <div class="sidebar-content">
+          <!-- Board Image -->
+          <div class="board-image-container">
+            <img id="board-image" src="assets/eblocks_Ard.png" alt="Selected Board" class="board-image">
+          </div>
+          <!-- Setup Page -->
+          <div class="setup-page">
+            <div class="setup-section">
+              <div class="section-header">
+                <h3>Connection Setup</h3>
+              </div>
+              <div class="setup-item">
+                <label for="com-port-select">COM Port</label>
+                <div class="port-selector-group">
+                  <select id="com-port-select" class="port-select">
+                    <option value="">Select a port...</option>
+                  </select>
+                  <button id="refresh-ports-btn" class="btn-scan" title="Refresh ports">↻</button>
+                </div>
+                <div id="port-warning" class="port-warning" style="display: none;">No COM port selected</div>
+              </div>
+            </div>
+
+            <!-- Combo Board Visualization -->
+            <div class="setup-section">
+              <div class="section-header">
+                <h3>Combo Board</h3>
+              </div>
+              <div class="setup-item">
+                <label for="combo-port-select">Port Pair</label>
+                <select id="combo-port-select" class="port-select">
+                  <option value="a/b">Port A / Port B</option>
+                  <option value="b/c">Port B / Port C</option>
+                  <option value="c/d">Port C / Port D</option>
+                  <option value="d/e">Port D / Port E</option>
+                  <option value="e/f">Port E / Port F</option>
+                </select>
+              </div>
+              <div class="combo-board-frame">
+                <!-- Top Row - First Port LEDs (8 LEDs) -->
+                <div class="combo-board-row combo-board-row-top">
+                  <div class="combo-led" data-port="first" data-bit="0"></div>
+                  <div class="combo-led" data-port="first" data-bit="1"></div>
+                  <div class="combo-led" data-port="first" data-bit="2"></div>
+                  <div class="combo-led" data-port="first" data-bit="3"></div>
+                  <div class="combo-led" data-port="first" data-bit="4"></div>
+                  <div class="combo-led" data-port="first" data-bit="5"></div>
+                  <div class="combo-led" data-port="first" data-bit="6"></div>
+                  <div class="combo-led" data-port="first" data-bit="7"></div>
+                </div>
+                
+                <!-- Center Display Area -->
+                <div class="combo-board-display">
+                  <div class="combo-board-display-content">
+                    <div class="combo-board-status" id="combo-board-status">
+                      <span class="status-text">Waiting for data...</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Bottom Row - Second Port LEDs (8 LEDs) -->
+                <div class="combo-board-row combo-board-row-bottom">
+                  <div class="combo-led" data-port="second" data-bit="0"></div>
+                  <div class="combo-led" data-port="second" data-bit="1"></div>
+                  <div class="combo-led" data-port="second" data-bit="2"></div>
+                  <div class="combo-led" data-port="second" data-bit="3"></div>
+                  <div class="combo-led" data-port="second" data-bit="4"></div>
+                  <div class="combo-led" data-port="second" data-bit="5"></div>
+                  <div class="combo-led" data-port="second" data-bit="6"></div>
+                  <div class="combo-led" data-port="second" data-bit="7"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="header-controls">
-        <button id="connect-btn" class="btn btn-primary">
-          <span class="icon">🔌</span>
-          Connect to Board
-        </button>
-        <div id="connection-status" class="status-indicator">
-          <span class="status-dot"></span>
-          <span class="status-text">Disconnected</span>
-        </div>
-      </div>
-    </header>
+      <div class="sidebar-resizer sidebar-resizer-left" id="leftResizer"></div>
 
-    <!-- Main container -->
-    <div class="main-container">
-      <!-- Left sidebar - Board info -->
-      <aside class="sidebar sidebar-left">
-        <div class="sidebar-section">
-          <h3>Board Information</h3>
-          <div class="board-info">
-            <div class="info-item">
-              <label>Status:</label>
-              <span id="board-status">Not connected</span>
-            </div>
-            <div class="info-item">
-              <label>Type:</label>
-              <span id="board-type">Unknown</span>
+      <!-- Main Editor Area -->
+      <div class="app-main">
+        <div class="code-editor">
+          <div class="editor-header">
+            <h2>Code Editor</h2>
+            <div class="editor-actions">
+              <button id="load-btn" class="btn-sm btn-outline">Load</button>
+              <button id="save-btn" class="btn-sm btn-outline">Save</button>
             </div>
           </div>
-        </div>
-
-        <div class="sidebar-section">
-          <h3>Board Settings</h3>
-          <div class="settings-group">
-            <label for="board-select">Target Board:</label>
-            <select id="board-select" class="input-select">
-              <option value="arduino-mega">Arduino Mega</option>
-              <option value="esp32">ESP32</option>
+          <div class="board-selector">
+            <label for="editor-board-select">Board Type:</label>
+            <select id="editor-board-select" class="editor-board-select">
+              <option value="arduino:avr:mega">Arduino Mega</option>
+              <option value="esp32:esp32:esp32">ESP32</option>
+              <option value="pic" disabled>PIC (Not Available)</option>
             </select>
           </div>
-          <div class="settings-group">
-            <label for="baud-select">Baud Rate:</label>
-            <select id="baud-select" class="input-select">
-              <option value="9600">9600</option>
-              <option value="19200">19200</option>
-              <option value="38400">38400</option>
-              <option value="57600">57600</option>
-              <option value="115200" selected>115200</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="sidebar-section">
-          <h3>Quick Start</h3>
-          <div class="quick-start">
-            <ol>
-              <li>Click "Connect to Board"</li>
-              <li>Select your serial port</li>
-              <li>Write your C++ code</li>
-              <li>Click "Run Code"</li>
-            </ol>
-            <div class="note">
-              <strong>Note:</strong> Boards must be pre-flashed with StandardFirmata.
-              Chrome/Edge browsers only (Web Serial API).
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      <!-- Main editor area -->
-      <main class="editor-area">
-        <div class="editor-header">
-          <h2>C++ Code Editor</h2>
-          <div class="editor-actions">
-            <button id="load-btn" class="btn btn-secondary">📂 Load</button>
-            <button id="save-btn" class="btn btn-secondary">💾 Save</button>
-            <button id="run-btn" class="btn btn-success">▶️ Run Code</button>
+          <div id="monaco-editor" class="editor-container"></div>
+          <div id="upload-status" class="upload-status" style="display: none;"></div>
+          <div class="upload-actions">
+            <button id="upload-btn" class="btn-upload">Upload Code</button>
           </div>
         </div>
         
-        <!-- Monaco Editor Container -->
-        <div id="editor-container"></div>
-
-        <!-- Status bar -->
-        <div class="status-bar">
-          <div id="editor-status" class="status-info">Ready</div>
-          <div class="status-lang">C++</div>
-        </div>
-      </main>
-
-      <!-- Right sidebar - Serial console -->
-      <aside class="sidebar sidebar-right">
-        <div class="sidebar-section console-section">
-          <div class="console-header">
-            <h3>Serial Console</h3>
-            <div class="console-controls">
-              <button id="clear-console-btn" class="btn-icon" title="Clear console">🗑️</button>
+        <!-- Serial Monitor (below code editor) -->
+        <div class="serial-monitor">
+          <div class="monitor-header">
+            <h2>Serial Monitor</h2>
+            <div class="monitor-controls">
+              <button id="clear-monitor-btn" class="btn-sm btn-outline">Clear</button>
               <label class="checkbox-label">
                 <input type="checkbox" id="autoscroll-checkbox" checked>
                 Auto-scroll
               </label>
             </div>
           </div>
-          
-          <div id="console-output" class="console-output">
-            <div class="console-welcome">
-              Welcome to eBlocks Online!
-              <br>Connect your board to start...
-            </div>
+          <div id="monitor-content" class="monitor-content">
+            <div class="monitor-empty">Waiting for serial data...</div>
           </div>
-
-          <div class="console-input-section">
-            <input type="text" id="console-input" class="console-input" placeholder="Send to board...">
-            <button id="send-btn" class="btn btn-small">Send</button>
+          <div class="monitor-input-section">
+            <form id="serial-send-form" class="monitor-input-form">
+              <input type="text" id="serial-input" class="monitor-input" placeholder="Send data...">
+              <button type="submit" class="btn-sm btn-outline btn-send">Send</button>
+            </form>
           </div>
         </div>
-      </aside>
-    </div>
+      </div>
 
-    <!-- Footer -->
-    <footer class="app-footer">
-      <div class="footer-info">
-        <span>eBlocks Online - Pure Web-Based IDE</span>
-        <span class="separator">|</span>
-        <span>Browser: <span id="browser-support">Checking...</span></span>
+      <!-- Right Sidebar -->
+      <div class="sidebar-resizer sidebar-resizer-right" id="rightResizer"></div>
+      <div class="sidebar sidebar-right" id="rightSidebar">
+        <div class="sidebar-header">
+          <button class="sidebar-toggle" id="rightSidebarToggle" title="Collapse">→</button>
+        </div>
+        <div class="sidebar-content">
+          <!-- Curriculum Page -->
+          <div class="curriculum-page">
+            <!-- Worksheet Viewer (shown when worksheet is selected) -->
+            <div id="worksheet-viewer" class="worksheet-viewer" style="display: none;">
+              <div class="worksheet-header">
+                <div class="worksheet-title-section">
+                  <h3 id="worksheet-viewer-title">Worksheet</h3>
+                  <span id="worksheet-viewer-code" class="worksheet-code"></span>
+                </div>
+                <button id="worksheet-close-btn" class="btn-sm btn-outline" title="Back to Curriculum">← Back</button>
+              </div>
+              <div id="worksheet-content" class="worksheet-content">
+                <!-- Worksheet content will be loaded here -->
+              </div>
+            </div>
+            
+            <!-- Curriculum List (shown by default) -->
+            <div id="curriculum-list" class="curriculum-list">
+              <div class="curriculum-header">
+                <h3>E-Blocks Curriculum</h3>
+              </div>
+              <div id="curriculum-content" class="curriculum-content">
+                <div class="curriculum-loading">Loading curriculum...</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="footer-links">
-        <a href="https://github.com/hadefuwa/eblocks-online" target="_blank">GitHub</a>
-        <span class="separator">|</span>
-        <a href="#" id="about-link">About</a>
-      </div>
-    </footer>
+    </main>
   </div>
 
-  <!-- Modal for unsupported browser -->
-  <div id="unsupported-modal" class="modal" style="display: none;">
-    <div class="modal-content">
-      <h2>⚠️ Unsupported Browser</h2>
-      <p>
-        eBlocks Online requires the <strong>Web Serial API</strong>, which is only available in:
-      </p>
-      <ul>
-        <li>Google Chrome (version 89+)</li>
-        <li>Microsoft Edge (version 89+)</li>
-        <li>Opera (version 75+)</li>
-      </ul>
-      <p>
-        Please switch to a supported browser to use this IDE.
-      </p>
-      <button id="close-modal-btn" class="btn btn-primary">Close</button>
-    </div>
-  </div>
-
-  <!-- Scripts -->
   <!-- Monaco Editor from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
-  
+
   <!-- Lodash (required by JSCPP) -->
   <script src="vendor/lodash.min.js"></script>
 
   <!-- JSCPP bundled locally for reliability -->
   <script src="vendor/jscpp.bundle.js"></script>
   <script>
-    // Build/version marker (update on deploy)
-    window.EBLOCKS_VERSION = "v1.1.0";
-    // JSCPP load check
-    window.EBLOCKS_JSCPP_LOADED = (typeof window.JSCPP !== 'undefined');
-    console.log('[eBlocks] JSCPP global after bundle:', window.EBLOCKS_JSCPP_LOADED);
+    window.EBLOCKS_VERSION = "v1.1.2";
   </script>
 
   <!-- Main application modules -->
