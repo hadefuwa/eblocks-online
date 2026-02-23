@@ -59,7 +59,8 @@ void loop() {
     // Load saved code if exists
     this.loadSavedCode();
 
-    // Debug info + version display
+    // Ensure JSCPP is loaded, then debug info
+    await this.ensureJSCPP();
     this.logDebugInfo();
 
     console.log('eBlocks Online initialized successfully');
@@ -352,6 +353,24 @@ void loop() {
       this.editor.setValue(saved);
       this.logToConsole('📂 Loaded saved code from browser storage', 'success');
     }
+  }
+
+  async ensureJSCPP() {
+    if (typeof JSCPP !== 'undefined') return true;
+
+    return new Promise((resolve) => {
+      const s = document.createElement('script');
+      s.src = 'vendor/jscpp.bundle.js';
+      s.onload = () => {
+        console.log('[eBlocks] JSCPP bundle loaded via ensureJSCPP');
+        resolve(true);
+      };
+      s.onerror = () => {
+        console.error('[eBlocks] Failed to load JSCPP bundle in ensureJSCPP');
+        resolve(false);
+      };
+      document.head.appendChild(s);
+    });
   }
 
   logDebugInfo() {
